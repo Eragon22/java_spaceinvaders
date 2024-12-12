@@ -1,0 +1,252 @@
+@startuml
+left to right direction
+
+class Config {
++ {static} DEF_WindowH : int
++ {static} DEF_WindowW : int
++ {static} DEF_Speed : int
++ {static} DEF_ShotSpeed : int
++ {static} DEF_EnemyHP : int
++ {static} DEF_EnemyDMG : int
++ {static} DEF_PlayerHP : int
++ {static} DEF_PlayerDMG : int
++ {static} DEF_WallHP : int
++ {static} DEF_ScoreMULT : int
++ {static} DEF_ScoreDEF : int
++ {static} leftKey : int
++ {static} rightKey : int
++ {static} shotKey : int
+
++ Config(String)
+
++ getWindowH() : {static} int 
++ getWindowW() : {static} int 
++ getSpeed() : {static} int 
++ getShotSpeed() : {static} int 
++ getEnemyHP() : {static} int 
++ getEnemyDMG() : {static} int 
++ getPlayerHP() : {static} int 
++ getPlayerDMG() : {static} int 
++ getWallHP() : {static} int 
++ getScoreMULT() : {static} int 
++ getScoreDEF() : {static} int 
++ leftKey() : {static} int 
++ rightKey() : {static} int 
++ shotKey() : {static} int 
+
++ setWindowH(int) : {static} void 
++ setWindowW(int) : {static} void 
++ setSpeed(int) : {static} void 
++ setShotSpeed(int) : {static} void 
++ setEnemyHP(int) : {static} void 
++ setEnemyDMG(int) : {static} void 
++ setPlayerHP(int) : {static} void 
++ setPlayerDMG(int) : {static} void 
++ setWallHP(int) : {static} void 
++ setScoreMULT(int) : {static} void 
++ setScoreDEF(int) : {static} void 
++ setleftKey(int) : {static} void 
++ setrightKey(int) : {static} void 
++ setshotKey(int) : {static} void 
+}
+
+GraphicObject::pos *-- Vector2D : - pos
+GraphicObject::size *-- Vector2D : - size
+
+class GraphicObject {
+- pos : Vector2D 
+- size : Vector2D 
+- img : Image 
+
++ GraphicObject(Vector2D, Vector2D, String)
++ scaleImg(Vector2D) : void 
++ getImg() : Image 
++ getPos() : Vector2D 
++ setPos(Vector2D) : void 
++ setPos(int, int) : void 
++ getSize() : Vector2D 
++ setSize(Vector2D) : void 
++ setSize(int, int) : void 
++ move(Vector2D) : void 
++ collides(GraphicObject) : boolean 
++ collides(GraphicObject, GraphicObject) : {static} boolean 
+}
+
+class Player{
+- name : String
+- score : int
+
++ Player(String, int)
++ getScore() : int 
++ getName() : String 
++ setScore(int) : void 
++ setName(String) : void 
+}
+
+class Vector2D {
+- x : double
+- y : double
+
++ Vector2D()
++ Vector2D(double, double)
++ Vector2D(Vector2D vec)
++ getX() : double 
++ getY() : double 
++ addX(double) : Vector2D 
++ addY(double) : Vector2D 
++ add(Vector2D) : Vector2D 
++ add(double, double) : Vector2D 
++ getXint() : int 
++ getYint() : int 
++ setX(double) : void 
++ setY(double) : void 
++ set(double, double) : void 
++ length() : double 
++ normalize() : void 
++ nullVector() : {static} Vector2D 
+}
+
+Bullet::dir *-- Vector2D : - dir 
+
+class Bullet extends GraphicObject {
+- spawnTime : long 
+- dir : Vector2D
+- speed : int
+
++ Bullet(Vector2D, Vector2D, String, Vector2D, int)
++ getSpawnTime() : long 
++ getDir() : Vector2D 
++ setDir(Vector2D dir) : void 
+}
+
+class DynamicObject extends GraphicObject {
+- maxHP : int
+- currentHP : int
+- shotSpeed : int
+- damage : int
+
++ DynamicObject(int, int, int, Vector2D, Vector2D, String)
+
++ getMaxHP() : int 
++ setMaxHP(int) : void 
++ getCurrentHP() : int 
++ setCurrentHP(int) : void 
++ getShotSpeed() : int 
++ setShotSpeed(int) : void 
++ getDamage() : int 
++ setDamage(int) : void 
++ shoot(Vector2D, String) : Bullet 
+}
+
+class Explosion extends GraphicObject {
+- long spawnTime
+
++ Explosion(Vector2D, Vector2D, String)
+
++ getSpawnTime() : long 
+}
+
+class StaticObject extends GraphicObject {
+- maxHP : int
+- currentHP : int
+
++ StaticObject(int, Vector2D pos, Vector2D size, String image)
++ getMaxHP() : int 
++ setMaxHP(int) : void 
++ getCurrentHP() : int 
++ setCurrentHP(int) : void 
+}
+
+App --> GameWindow
+
+class App {
+- App()
+
++ main(String[]) : void {static} 
+}
+
+class GamePanel extends JPanel {
+- width : int
+- height : int 
+- canvas : BufferedImage
+
++ GamePanel(int, int)
++ paintObject(GraphicObject) : void 
++ paintTextCenter(Font, String, int, int) : void 
++ paintTextRight(Font, String, int, int) : void 
++ clear() : void 
+~ paintComponent(Graphics) : void 
+}
+
+Config <-- GameWindow
+GameWindow::enemyBullets *-- Bullet : - enemyBullets
+GameWindow::playerBullets *-- Bullet : - playerBullets
+GameWindow::leftBoundary *-- GraphicObject : - leftBoundary
+GameWindow::rightBoundary *-- GraphicObject : - rightBoundary
+GameWindow::background *-- GraphicObject : - background
+GameWindow::menuicon *-- GraphicObject : - menuicon
+GameWindow::currentPanel *-- GamePanel : - currentPanel 
+GameWindow::enemies *-- DynamicObject : - enemies
+GameWindow::player *-- DynamicObject : - player
+GameWindow::walls *-- StaticObject : - walls
+GameWindow::explosions *-- Explosion : - explosions
+GameWindow::toplist *-- Player : - toplist
+
+class GameWindow extends JFrame implements KeyListener {
+- isLeftKeyPressed : boolean 
+- isRightKeyPressed : boolean 
+- isShotKeyPressed : boolean 
+- currentPanel : GamePanel 
+- regular : Font 
+- bold : Font 
+- leftBoundary : GraphicObject
+- rightBoundary : GraphicObject
+- background : GraphicObject
+- menuicon : GraphicObject
+- walls : ArrayList<StaticObject> 
+- enemies : ArrayList<DynamicObject> 
+- enemyBullets : ArrayList<Bullet> 
+- playerBullets : ArrayList<Bullet> 
+- explosions : ArrayList<Explosion> 
+- player : DynamicObject 
+- toplist : ArrayList<Player> 
+
+- currentState : State 
+- direction : boolean 
+- selectedMenu : boolean 
+- rand : Random 
+- score : int 
+- playerName : String 
+
++ GameWindow()
+- initAssets() : void 
+- initTop() : void 
+- writeTop() : void 
+- State : enum 
++ open() : void 
++ menuState() : void 
++ gameInit() : void 
++ gameState() : void 
++ scoreState() : void 
++ scoreBoardState() : void 
+- initWall(Vector2D) : void 
+- initEnemies(Vector2D) : void 
+- initPlayer(Vector2D) : void 
+- updateExplosions() : void 
+- updateHearts() : void 
+- moveEnemies() : void 
+- movePlayer() : void 
+- movePlayerBullets() : void 
+- moveEnemyBullets() : void 
+- shootPlayer() : void 
+- shootEnemy() : void 
+- enemyHitWall() : void 
+- enemyHitPlayer() : void 
+- hitWall(Bullet) : boolean 
+- hitPlayer(Bullet) : boolean 
+- hitEnemy(Bullet) : boolean 
++ keyPressed(KeyEvent) : void 
++ keyReleased(KeyEvent) : void 
++ keyTyped(KeyEvent) : void 
+}
+@enduml

@@ -1,0 +1,32 @@
+{
+    "__comment": {
+        "CONTROLS INFO": {
+            "Key values are stored based on the KeyEvent class, for example KeyEvent.VK_A = 'A' = 65": 0,
+            "Check this link for the specific values:": 0,
+            "https://docs.oracle.com/javase/8/docs/api/java/awt/event/KeyEvent.html": 0
+        },
+        "SETTINGS INFO": {
+            "Speed -> How many frames per second (1-1000)": 0,
+            "ShotSpeed -> How fast do enemies,player shoots": 0,
+            "EnemyHP-DMG, PlayerHP-DMG, WallHP -> These are exact values": 0,
+            "ScoreDEF -> How much score you start with": 0,
+            "ScoreMULT -> Score multiplier, how much score you get for each alien": 0
+        }
+    },
+    "Controls": {
+        "LeftKey": 65,
+        "RightKey": 68,
+        "ShotKey": 87
+    },
+    "Settings": {
+        "Speed": 100,
+        "ShotSpeed": 1,
+        "EnemyHP": 1,
+        "EnemyDMG": 1,
+        "PlayerHP": 3,
+        "PlayerDMG": 1,
+        "WallHP": 3,
+        "ScoreDEF": 1000,
+        "ScoreMULT": 1
+    }
+}
